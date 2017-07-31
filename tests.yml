@@ -1,0 +1,19 @@
+- hosts: localhost
+  roles:
+    - role: standard-test-beakerlib
+      tags:
+        - classic
+        - container
+      tests:
+        - basic
+        - hostnamectl
+        - tmpfiles
+        - killmode
+        - localectl
+        - loginctl
+        - timedatectl
+        - rlimits
+        - journal
+        - jobs
+        - dropin
+        - sched
