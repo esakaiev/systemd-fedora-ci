@@ -1,0 +1,19 @@
+[Unit]
+Description=Test Socket
+
+[Socket]
+ListenStream=127.0.0.1:9999
+
+[Socket]
+ListenDatagram=127.0.0.1:9999
+
+[Socket]
+ListenSequentialPacket=/var/run/test.socket
+
+[Socket]
+ListenFIFO=/var/run/test-fifo
+FileDescriptorName=sockio-stdin
+RemoveOnStop=true
+
+[Install]
+WantedBy=sockets.target
