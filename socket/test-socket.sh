@@ -30,6 +30,12 @@ systemctl start test-protocol.socket
 # ListenDatagram=udplite
 [[ "$(lsof -p 1 | grep UDPLITE | awk '{print $NF}')" == "localhost:9998" ]]
 
+# BindIPv6Only=both
+[[ "$(netstat -antp | grep 9990 | awk '{print $NF}')" == "1/systemd" ]]
+[[ "$(netstat -antp | grep 9990 | awk '{print $4}')"  == ":::9990"   ]]
+
+# SocketUser=, SocketGroup=
+[[ "$(ls -al /var/run/test-fifo | awk '{print $3 $4}')" == "nobodynobody" ]]
 
 touch /tmp/testok
 

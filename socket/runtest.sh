@@ -61,7 +61,7 @@ EOF"
 
     rlPhaseStartCleanup
 
-       rlRun "rm /tmp/testok rm /usr/bin/test-socket.sh /etc/systemd/system/test.socket /etc/systemd/system/test.service /etc/systemd/system/test-protocol.socket /etc/systemd/system/test-protocol.service /etc/systemd/system/testsuite.service"
+       rlRun "rm /tmp/testok /usr/bin/test-socket.sh /etc/systemd/system/test.socket /etc/systemd/system/test.service /etc/systemd/system/test-protocol.socket /etc/systemd/system/test-protocol.service /etc/systemd/system/testsuite.service"
 
        rlRun "systemctl daemon-reload"
     rlPhaseEnd
