@@ -35,4 +35,26 @@ udevadm test-builtin net_setup_link /sys/class/net/test99
 ip link del test99
 rm /etc/systemd/network/test99.link
 
+cat >/etc/systemd/network/test99.link <<EOF
+
+[Match]
+MACAddress=00:01:02:aa:bb:cc
+
+[Link]
+Alias=testalias99
+AutoNegotiation=0
+
+EOF
+
+ip link add name test99 type dummy
+ip link set dev test99 addr 00:01:02:aa:bb:cc
+ip link set dev test99 up
+
+udevadm test-builtin net_setup_link /sys/class/net/test99
+
+[[ "$(cat /sys/class/net/test99/ifalias)" == "testalias99" ]]
+
+ip link del test99
+rm /etc/systemd/network/test99.link
+
 touch /tmp/testok
