@@ -3,7 +3,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 #   runtest.sh of /CoreOS/systemd/Sanity/tmpfiles
-#   Description: Test for BZ#1365870 (Systemd-tmpfiles does not set owner/group defined)
+#   Description: Test for (Systemd-tmpfiles does not set owner/group defined)
 #   Author: Branislav Blaskovic <bblaskov@redhat.com>
 #   Some parts based on script by: Jakub Martisko <jamartis@redhat.com>
 #
@@ -42,7 +42,7 @@ rlJournalStart
         rlRun "groupadd bar"
     rlPhaseEnd
 
-    rlPhaseStartTest "bug 1365870"
+    rlPhaseStartTest "test tmpfiles: enforce ordering when executing lines"
 
 cat <<\EOF > /etc/tmpfiles.d/hello.conf
 D /run/hello  1777 foo bar -
@@ -56,7 +56,7 @@ EOF
         rlAssertGrep "root.*root.*hello.test$" $rlRun_LOG
     rlPhaseEnd
 
-    rlPhaseStartTest "bug 1296288"
+    rlPhaseStartTest "test tmpfiles: don't follow symlinks when adjusting ACLs, fille attributes, access modes or ownership"
 
 cat <<\EOF > /etc/tmpfiles.d/hello2.conf
 D /run/hello2  1777 foo bar -
