@@ -3,6 +3,18 @@ set -x
 set -e
 set -o pipefail
 
+if ! type "netstat" > /dev/null; then
+    echo "Skipping test as iproute package does not exist ."
+    touch /tmp/testok
+    exit 0
+fi
+
+if ! type "lsof" > /dev/null; then
+    echo "Skipping test as lsof package does not exist ."
+    touch /tmp/testok
+    exit 0
+fi
+
 echo "Starting test socket ..."
 
 systemctl stop test.socket

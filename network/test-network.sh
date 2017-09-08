@@ -3,6 +3,12 @@ set -x
 set -e
 set -o pipefail
 
+if ! type "ip" > /dev/null; then
+    echo "Skipping test as iproute package does not exist"
+    touch /tmp/testok
+    exit 0
+fi
+
 # Netdev Kind test
 # bond bridge gre gretap ip6gre	ip6tnl ip6gretap ipip ipvlan macvlan macvtap
 # sit tap tun veth vlan vti vti6 vxlan geneve vrf vcan
