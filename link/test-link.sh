@@ -3,6 +3,12 @@ set -x
 set -e
 set -o pipefail
 
+if ! type "ip" > /dev/null; then
+    echo "Skipping test as iproute package does not exist, skipping test."
+    touch /tmp/testok
+    exit 0
+fi
+
 ip link add name test99 type veth peer name test99-guest
 ip link set dev test99 addr 00:01:02:aa:bb:cc
 ip link set dev test99 up
