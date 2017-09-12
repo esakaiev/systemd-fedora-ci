@@ -386,6 +386,12 @@ ip link del test5
 systemctl stop systemd-networkd
 
 # DHCP
+if ! type "python3" > /dev/null; then
+    echo "Skipping DHCP test as python3 package does not exist"
+    touch /tmp/testok
+    exit 0
+fi
+
 /usr/bin/python3 /usr/bin/networkd-test.py
 
 return_code=$?
