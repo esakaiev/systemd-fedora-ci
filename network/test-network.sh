@@ -384,6 +384,14 @@ ip link del test4
 ip link del test5
 
 systemctl stop systemd-networkd
-systemctl start systemd-networkd
+
+# DHCP
+/usr/bin/python3 /usr/bin/networkd-test.py
+
+return_code=$?
+
+if [ $return_code != "0" ]; then
+   exit $return_code
+fi
 
 touch /tmp/testok

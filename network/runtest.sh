@@ -44,7 +44,7 @@ After=multi-user.target
 ExecStart=/usr/bin/test-network.sh
 Type=oneshot
 EOF"
-        rlRun "cp test-network.sh /usr/bin/"
+        rlRun "cp test-network.sh networkd-test.py /usr/bin/"
         rlRun "systemctl daemon-reload"
     rlPhaseEnd
 
@@ -59,7 +59,7 @@ EOF"
 
     rlPhaseStartCleanup
 
-       rlRun "rm /tmp/testok /usr/bin/test-network.sh /etc/systemd/system/testsuite.service"
+       rlRun "rm /tmp/testok /usr/bin/test-network.sh /usr/bin/networkd-test.py /etc/systemd/system/testsuite.service"
        rlRun "systemctl daemon-reload"
     rlPhaseEnd
 rlJournalPrintText
