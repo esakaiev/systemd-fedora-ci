@@ -45,6 +45,11 @@ Mode=802.3ad
 TransmitHashPolicy=layer3+4
 MIIMonitorSec=1s
 LACPTransmitRate=fast
+UpDelaySec=2s
+DownDelaySec=2s
+ResendIGMP=4
+MinLinks=1
+
 EOF
 
 # Veth pair
@@ -146,6 +151,38 @@ read MulticastSnooping <  /sys/devices/virtual/net/bridge99/bridge/multicast_sno
 read STP <  /sys/devices/virtual/net/bridge99/bridge/stp_state
 [[ "$STP" == "1" ]]
 
+
+# Bonding property test
+read Mode < /sys/devices/virtual/net/bond99/bonding/mode
+[[ "$Mode" == "802.3ad 4" ]]
+
+read TransmitHashPolicy < /sys/devices/virtual/net/bond99/bonding/xmit_hash_policy
+[[ "$TransmitHashPolicy" == "layer3+4 1" ]]
+
+read MIIMonitorSec < /sys/devices/virtual/net/bond99/bonding/miimon
+[[ "$MIIMonitorSec" == "1000" ]]
+
+read LACPTransmitRate < /sys/devices/virtual/net/bond99/bonding/lacp_rate
+[[ "$LACPTransmitRate" == "fast 1" ]]
+
+read UpDelaySec < /sys/devices/virtual/net/bond99/bonding/updelay
+[[ "$UpDelaySec" == "2000" ]]
+
+read DownDelaySec < /sys/devices/virtual/net/bond99/bonding/downdelay
+[[ "$DownDelaySec" == "2000" ]]
+
+read ResendIGMP < /sys/devices/virtual/net/bond99/bonding/resend_igmp
+[[ "$ResendIGMP" == "4" ]]
+
+read MinLinks < /sys/devices/virtual/net/bond99/bonding/min_links
+[[ "$MinLinks" == "1" ]]
+
+# Tap and tun property test
+read TapFlags < /sys/devices/virtual/net/tap99/tun_flags
+[[ "$TapFlags" == "0x902" ]]
+
+read TunFlags < /sys/devices/virtual/net/tun99/tun_flags
+[[ "$TunFlags" == "0x901" ]]
 
 ip link del bridge99
 ip link del tap99
