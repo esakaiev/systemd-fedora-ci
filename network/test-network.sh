@@ -4,7 +4,7 @@ set -e
 set -o pipefail
 
 if ! type "ip" > /dev/null; then
-    echo "Skipping test as iproute package does not exist"
+    echo "Skipping test as iproute package does not exist ."
     touch /tmp/testok
     exit 0
 fi
@@ -21,11 +21,21 @@ cat >/etc/systemd/network/25-bridge.netdev <<EOF
 [NetDev]
 Name=bridge99
 Kind=bridge
+
+[Bridge]
+HelloTimeSec=9
+MaxAgeSec=9
+ForwardDelaySec=9
+AgeingTimeSec=9
+Priority=9
+MulticastQuerier= true
+MulticastSnooping=true
+STP=true
+
 EOF
 
 # Bond
 cat >/etc/systemd/network/25-bond.netdev <<EOF
-
 [NetDev]
 Name=bond99
 Kind=bond
@@ -109,6 +119,34 @@ sleep 3
 [[ -L /sys/class/net/vrf99 ]]
 [[ -L /sys/class/net/vcan99 ]]
 
+
+# Bridge property test
+
+read HelloTimeSec <  /sys/devices/virtual/net/bridge99/bridge/hello_time
+[[ "$HelloTimeSec" == "900" ]]
+
+read MaxAgeSec <  /sys/devices/virtual/net/bridge99/bridge/max_age
+[[ "$MaxAgeSec" == "900" ]]
+
+read ForwardDelaySec <  /sys/devices/virtual/net/bridge99/bridge/forward_delay
+[[ "$ForwardDelaySec" == "900" ]]
+
+read AgeingTimeSec <  /sys/devices/virtual/net/bridge99/bridge/ageing_time
+[[ "$AgeingTimeSec" == "900" ]]
+
+read Priority <  /sys/devices/virtual/net/bridge99/bridge/priority
+[[ "$Priority" == "9" ]]
+
+read MulticastQuerier <  /sys/devices/virtual/net/bridge99/bridge/multicast_querier
+[[ "$MulticastQuerier" == "1" ]]
+
+read MulticastSnooping <  /sys/devices/virtual/net/bridge99/bridge/multicast_snooping
+[[ "$MulticastSnooping" == "1" ]]
+
+read STP <  /sys/devices/virtual/net/bridge99/bridge/stp_state
+[[ "$STP" == "1" ]]
+
+
 ip link del bridge99
 ip link del tap99
 ip link del tun99
@@ -126,7 +164,6 @@ rm /etc/systemd/network/25-vrf.netdev
 rm /etc/systemd/network/25-bridge.netdev
 rm /etc/systemd/network/25-tap.netdev
 rm /etc/systemd/network/25-tun.netdev
-
 
 # Test netdev which require a .network file support
 
@@ -343,6 +380,11 @@ sleep 2
 [[ -L /sys/class/net/macvlan99 ]]
 [[ -L /sys/class/net/ipvlan99 ]]
 
+# netdev property test.
+
+[[ "$(ip -d link show vlan99 | grep id |  awk '{print $5}')" == "99" ]]
+[[ "$(ip -d link show vxlan99 | grep id | awk '{print $3}')" == "999" ]]
+
 # Perform cleanup
 # Remove netdevs
 ip link del vlan99
@@ -387,7 +429,7 @@ systemctl stop systemd-networkd
 
 # DHCP
 if ! type "python3" > /dev/null; then
-    echo "Skipping DHCP test as python3 package does not exist"
+    echo "Skipping DHCP test as python3 package does not exist ."
     touch /tmp/testok
     exit 0
 fi
