@@ -4,6 +4,11 @@ set -x
 set -e
 set -o pipefail
 
+# Include Beaker environment
+. /usr/share/beakerlib/beakerlib.sh || exit 1
+
+result=0
+
 function is_inaccessible_available() {
     files='/run/systemd/inaccessible/reg
            /run/systemd/inaccessible/dir
@@ -296,6 +301,23 @@ test_exec_read_only_path_suceed() {
     [[ $? -eq 0 ]]
 }
 
+test_exec_restrict_realtime_fail() {
+
+    set +e
+
+    systemctl start exec-restrict-realtime.service > /dev/null 2>&1
+
+    if [ $? -eq 0 ]
+    then
+        rlLogError "exec-restrict-realtime.service failed."
+        result=1
+    fi
+
+    rlLogDebug "exec-restrict-realtime.service passed."
+
+    set -e
+}
+
 test_exec_workingdirectory
 test_exec_privatedevices
 test_exec_privatedevices_capabilities
@@ -316,5 +338,9 @@ test_exec_oomscoreadjust
 test_exec_ioschedulingclass
 test_exec_spec_interpolation
 test_exec_read_only_path_suceed
+test_exec_restrict_realtime_fail
 
-touch /tmp/testok
+if [ $result -eq 0 ]
+then
+    touch /tmp/testok
+fi

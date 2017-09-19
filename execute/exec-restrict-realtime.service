@@ -1,0 +1,7 @@
+[Unit]
+Description=Test for RestrictRealtime
+
+[Service]
+ExecStart=/usr/bin/chrt --rr 99 /bin/true
+Type=oneshot
+RestrictRealtime=true
