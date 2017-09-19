@@ -318,6 +318,103 @@ test_exec_restrict_realtime_fail() {
     set -e
 }
 
+test_exec_restrict_namespaces() {
+
+    systemctl start exec-restrict-namespaces-no.service
+    [[ $? -eq 0 ]]
+
+    systemctl start exec-restrict-namespaces-mnt.service
+    [[ $? -eq 0 ]]
+
+    set +e
+
+    systemctl start exec-restrict-namespaces-yes.service
+
+    if [ $? -eq 0 ]
+    then
+        rlLogError "exec-restrict-namespaces-yes.service failed."
+        result=1
+    fi
+
+    rlLogDebug "exec-restrict-namespaces-yes.service passed."
+
+    systemctl start exec-restrict-namespaces-mnt-blacklist.service
+
+    if [ $? -eq 0 ]
+    then
+        rlLogError "exec-restrict-namespaces-mnt-blacklist.service failed."
+        result=1
+    fi
+
+    rlLogDebug "exec-restrict-namespaces-mnt-blacklist.service passed."
+
+    set -e
+}
+
+test_exec_systemcallerrornumber() {
+
+    set +e
+
+    systemctl start exec-systemcallerrornumber.service
+
+    if [ $? -eq 0 ]
+    then
+        rlLogError "exec-systemcallerrornumber.service failed."
+        result=1
+    fi
+
+    rlLogDebug "exec-systemcallerrornumber.service passed."
+
+    set -e
+}
+
+test_exec_systemcallfilter() {
+
+    set +e
+
+    systemctl start exec-systemcallfilter-not-failing.service
+
+    if [ $? -eq 0 ]
+    then
+        rlLogError "exec-systemcallfilter-not-failing.service failed."
+        result=1
+    fi
+
+    rlLogDebug "exec-systemcallfilter-not-failing.service passed"
+
+    systemctl start exec-systemcallfilter-not-failing2.service
+
+    if [ $? -eq 0 ]
+    then
+        rlLogError "exec-systemcallfilter-not-failing2.service failed."
+        result=1
+    fi
+
+    rlLogDebug "exec-systemcallfilter-not-failing2.service passed"
+
+    systemctl start exec-systemcallfilter-failing.service
+
+    if [ $? -eq 0 ]
+    then
+        rlLogError "exec-systemcallfilter-failing.service failed."
+        result=1
+    fi
+
+    rlLogDebug "exec-systemcallfilter-failing.service passed."
+
+    systemctl start exec-systemcallfilter-failing2.service
+
+    if [ $? -eq 0 ]
+    then
+        rlLogError "exec-systemcallfilter-failing2.service failed."
+        result=1
+    fi
+
+    rlLogDebug "exec-systemcallfilter-failing2.service passed."
+
+    set -e
+}
+
 test_exec_workingdirectory
 test_exec_privatedevices
 test_exec_privatedevices_capabilities
@@ -339,6 +436,9 @@ test_exec_ioschedulingclass
 test_exec_spec_interpolation
 test_exec_read_only_path_suceed
 test_exec_restrict_realtime_fail
+test_exec_restrict_namespaces
+test_exec_systemcallerrornumber
+test_exec_systemcallfilter
 
 if [ $result -eq 0 ]
 then
