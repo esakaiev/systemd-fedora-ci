@@ -311,9 +311,9 @@ test_exec_restrict_realtime_fail() {
     then
         rlLogError "exec-restrict-realtime.service failed."
         result=1
+    else
+        rlLogDebug "exec-restrict-realtime.service passed."
     fi
-
-    rlLogDebug "exec-restrict-realtime.service passed."
 
     set -e
 }
@@ -334,9 +334,9 @@ test_exec_restrict_namespaces() {
     then
         rlLogError "exec-restrict-namespaces-yes.service failed."
         result=1
+    else
+        rlLogDebug "exec-restrict-namespaces-yes.service passed."
     fi
-
-    rlLogDebug "exec-restrict-namespaces-yes.service passed."
 
     systemctl start exec-restrict-namespaces-mnt-blacklist.service
 
@@ -344,9 +344,9 @@ test_exec_restrict_namespaces() {
     then
         rlLogError "exec-restrict-namespaces-mnt-blacklist.service failed."
         result=1
+    else
+        rlLogDebug "exec-restrict-namespaces-mnt-blacklist.service passed."
     fi
-
-    rlLogDebug "exec-restrict-namespaces-mnt-blacklist.service passed."
 
     set -e
 }
@@ -361,9 +361,9 @@ test_exec_systemcallerrornumber() {
     then
         rlLogError "exec-systemcallerrornumber.service failed."
         result=1
+    else
+        rlLogDebug "exec-systemcallerrornumber.service passed."
     fi
-
-    rlLogDebug "exec-systemcallerrornumber.service passed."
 
     set -e
 }
@@ -374,23 +374,11 @@ test_exec_systemcallfilter() {
 
     systemctl start exec-systemcallfilter-not-failing.service
 
-    if [ $? -eq 0 ]
-    then
-        rlLogError "exec-systemcallfilter-not-failing.service failed."
-        result=1
-    fi
-
-    rlLogDebug "exec-systemcallfilter-not-failing.service passed"
+    [[ $? -eq 0 ]]
 
     systemctl start exec-systemcallfilter-not-failing2.service
 
-    if [ $? -eq 0 ]
-    then
-        rlLogError "exec-systemcallfilter-not-failing2.service failed."
-        result=1
-    fi
-
-    rlLogDebug "exec-systemcallfilter-not-failing2.service passed"
+    [[ $? -eq 0 ]]
 
     systemctl start exec-systemcallfilter-failing.service
 
@@ -398,9 +386,9 @@ test_exec_systemcallfilter() {
     then
         rlLogError "exec-systemcallfilter-failing.service failed."
         result=1
+    else
+        rlLogDebug "exec-systemcallfilter-failing.service passed."
     fi
-
-    rlLogDebug "exec-systemcallfilter-failing.service passed."
 
     systemctl start exec-systemcallfilter-failing2.service
 
@@ -408,11 +396,25 @@ test_exec_systemcallfilter() {
     then
         rlLogError "exec-systemcallfilter-failing2.service failed."
         result=1
+    else
+        rlLogDebug "exec-systemcallfilter-failing2.service passed."
     fi
 
-    rlLogDebug "exec-systemcallfilter-failing2.service passed."
+    set -e
+}
+
+test_exec_restrict_address_families() {
+
+    systemctl start exec-restrict-address-families.service
+
+    set +e
+
+    systemctl status exec-restrict-address-families.service > /dev/null 2>&1
+    r=$?
 
     set -e
+
+    [[ $r -eq 3 ]]
 }
 
 test_exec_workingdirectory
@@ -439,6 +441,7 @@ test_exec_restrict_realtime_fail
 test_exec_restrict_namespaces
 test_exec_systemcallerrornumber
 test_exec_systemcallfilter
+test_exec_restrict_address_families
 
 if [ $result -eq 0 ]
 then
