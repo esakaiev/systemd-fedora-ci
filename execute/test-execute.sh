@@ -328,7 +328,7 @@ test_exec_restrict_namespaces() {
 
     set +e
 
-    systemctl start exec-restrict-namespaces-yes.service
+    systemctl start exec-restrict-namespaces-yes.service > /dev/null 2>&1
 
     if [ $? -eq 0 ]
     then
@@ -338,7 +338,7 @@ test_exec_restrict_namespaces() {
         rlLogDebug "exec-restrict-namespaces-yes.service passed."
     fi
 
-    systemctl start exec-restrict-namespaces-mnt-blacklist.service
+    systemctl start exec-restrict-namespaces-mnt-blacklist.service > /dev/null 2>&1
 
     if [ $? -eq 0 ]
     then
@@ -355,7 +355,7 @@ test_exec_systemcallerrornumber() {
 
     set +e
 
-    systemctl start exec-systemcallerrornumber.service
+    systemctl start exec-systemcallerrornumber.service > /dev/null 2>&1
 
     if [ $? -eq 0 ]
     then
@@ -380,7 +380,7 @@ test_exec_systemcallfilter() {
 
     [[ $? -eq 0 ]]
 
-    systemctl start exec-systemcallfilter-failing.service
+    systemctl start exec-systemcallfilter-failing.service > /dev/null 2>&1
 
     if [ $? -eq 0 ]
     then
@@ -390,7 +390,7 @@ test_exec_systemcallfilter() {
         rlLogDebug "exec-systemcallfilter-failing.service passed."
     fi
 
-    systemctl start exec-systemcallfilter-failing2.service
+    systemctl start exec-systemcallfilter-failing2.service > /dev/null 2>&1
 
     if [ $? -eq 0 ]
     then
@@ -415,6 +415,35 @@ test_exec_restrict_address_families() {
     set -e
 
     [[ $r -eq 3 ]]
+}
+
+test_exec_personality() {
+
+    arch=$(uname --hardware-platform)
+    byte_order=$(echo -n I | od -to2 | head -n1 | cut -f2 -d" " | cut -c6)
+
+    if [ $(arch) == "x86_64" ]
+    then
+        systemctl start exec-personality-x86-64.service
+    elif [ $(arch) == "s390" ]
+    then
+        systemctl start exec-personality-s390.service
+    elif [ $(arch) == "powerpc64" ]
+    then
+        # little endian
+        if [ $(byte_order) == "1" ]
+        then
+            systemctl start exec-personality-ppc64.service
+        else
+            systemctl start exec-personality-ppc64le.service
+        fi
+    elif [ $(arch) == "aarch64" ]
+    then
+        systemctl start exec-personality-aarch64.service
+    elif [ $(arch) == "i386" ]
+    then
+        systemctl start exec-personality-x86.service
+    fi
 }
 
 test_exec_workingdirectory
@@ -442,6 +471,7 @@ test_exec_restrict_namespaces
 test_exec_systemcallerrornumber
 test_exec_systemcallfilter
 test_exec_restrict_address_families
+test_exec_personality
 
 if [ $result -eq 0 ]
 then
