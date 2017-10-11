@@ -27,6 +27,7 @@
         - issue-3166
 # disabled due BZ#1493478
 #        - network
+         - modules-load
       required_packages:
         - ethtool                   # link tests needs this package
         - findutils                 # beakerlib needs find command
