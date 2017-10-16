@@ -403,18 +403,26 @@ test_exec_systemcallfilter() {
     set -e
 }
 
-test_exec_restrict_address_families() {
 
-    systemctl start exec-restrict-address-families.service
+test_exec_restrict_address_families() {
 
     set +e
 
-    systemctl status exec-restrict-address-families.service > /dev/null 2>&1
-    r=$?
+    systemctl start exec-restrict-address-families.service
+
+    sleep 1
+
+    systemctl status exec-restrict-address-families.service #> /dev/null 2>&1
+
+    if [ $? -eq 0 ]
+    then
+        rlLogError "exec-restrict-address-families.service failed."
+        result=1
+    else
+        rlLogDebug "exec-restrict-address-families.service passed."
+    fi
 
     set -e
-
-    [[ $r -eq 3 ]]
 }
 
 test_exec_personality() {
@@ -446,6 +454,20 @@ test_exec_personality() {
     fi
 }
 
+test_exec_dynamic_user() {
+    systemctl start exec-dynamicuser-fixeduser.service
+    [[ $? -eq 0 ]]
+
+    systemctl start exec-dynamicuser-fixeduser-one-supplementarygroup.service
+    [[ $? -eq 0 ]]
+
+    systemctl start exec-dynamicuser-supplementarygroups.service
+    [[ $? -eq 0 ]]
+
+  #  systemctl start exec-dynamicuser-state-dir.service
+  #  [[ $? -eq 0 ]]
+}
+
 test_exec_workingdirectory
 test_exec_privatedevices
 test_exec_privatedevices_capabilities
@@ -472,6 +494,7 @@ test_exec_systemcallerrornumber
 test_exec_systemcallfilter
 test_exec_restrict_address_families
 test_exec_personality
+test_exec_dynamic_user
 
 if [ $result -eq 0 ]
 then

@@ -1,5 +1,5 @@
 [Unit]
-Description=Test RestrictAddressFamilies=AF_INET AF_INET6
+Description=Test RestrictAddressFamilies=~AF_INET AF_INET6
 
 [Service]
 ExecStart=/bin/sh -c '/usr/bin/nc -l 8000'
