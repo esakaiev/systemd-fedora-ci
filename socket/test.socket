@@ -22,5 +22,8 @@ SocketMode=0666
 ListenStream=9990
 BindIPv6Only=both
 
+[Socket]
+ListenStream=vsock:2:1234
+
 [Install]
 WantedBy=sockets.target

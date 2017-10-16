@@ -49,6 +49,9 @@ systemctl start test-protocol.socket
 # SocketUser=, SocketGroup=
 [[ "$(ls -al /var/run/test-fifo | awk '{print $3 $4}')" == "nobodynobody" ]]
 
+# vsock
+[[ "$(systemctl status test.socket | grep vsock | sed "s/^ *//")" == "vsock:2:1234 (Stream)" ]]
+
 touch /tmp/testok
 
 systemctl stop test.socket
