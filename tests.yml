@@ -28,9 +28,11 @@
 # disabled due BZ#1493478
 #        - network
          - modules-load
+         - activate
       required_packages:
         - ethtool                   # link tests needs this package
         - findutils                 # beakerlib needs find command
         - kernel-modules-extra      # network test needs vcan module
         - lsof                      # socket test needs this package
         - systemd
+        - nc
