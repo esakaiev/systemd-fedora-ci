@@ -52,6 +52,9 @@ systemctl start test-protocol.socket
 # vsock
 [[ "$(systemctl status test.socket | grep vsock | sed "s/^ *//")" == "vsock:2:1234 (Stream)" ]]
 
+# netlink route
+[[ "$(systemctl status test.socket | grep route |  sed "s/^ *//")" == "route 1361 (Netlink)" ]]
+
 touch /tmp/testok
 
 systemctl stop test.socket

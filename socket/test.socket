@@ -25,5 +25,8 @@ BindIPv6Only=both
 [Socket]
 ListenStream=vsock:2:1234
 
+[Socket]
+ListenNetlink=route 1361
+
 [Install]
 WantedBy=sockets.target
