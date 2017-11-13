@@ -13,7 +13,7 @@ ip link add name test99 type veth peer name test99-guest
 ip link set dev test99 addr 00:01:02:aa:bb:cc
 ip link set dev test99 up
 
-cat >/etc/systemd/network/test99.link <<EOF
+cat >/etc/systemd/network/00-test.link <<EOF
 
 [Match]
 MACAddress=00:01:02:aa:bb:cc
