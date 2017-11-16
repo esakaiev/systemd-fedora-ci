@@ -36,3 +36,4 @@
         - lsof                      # socket test needs this package
         - systemd
         - nc
+        - python                    # beakerlib-journalling requires python
