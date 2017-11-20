@@ -1,0 +1,13 @@
+[Unit]
+Description=Test Socket
+
+[Socket]
+ListenStream=127.0.0.1:9998
+SocketProtocol=sctp
+
+[Socket]
+ListenDatagram=127.0.0.1:9998
+SocketProtocol=udplite
+
+[Install]
+WantedBy=sockets.target
