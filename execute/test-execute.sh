@@ -468,6 +468,21 @@ test_exec_dynamic_user() {
   #  [[ $? -eq 0 ]]
 }
 
+test_exec_unset_environment() {
+    systemctl start exec-unset-environment.service
+    [[ $? -eq 0 ]]
+}
+
+test_exec_stdin_data() {
+    systemctl start exec-stdin-data.service
+    [[ $? -eq 0 ]]
+}
+
+test_exec_stdio_file() {
+    systemctl start exec-stdio-file.service
+    [[ $? -eq 0 ]]
+}
+
 test_exec_workingdirectory
 test_exec_privatedevices
 test_exec_privatedevices_capabilities
@@ -495,6 +510,9 @@ test_exec_systemcallfilter
 test_exec_restrict_address_families
 test_exec_personality
 test_exec_dynamic_user
+#test_exec_unset_environment
+#test_exec_stdin_data
+#test_exec_stdio_file
 
 if [ $result -eq 0 ]
 then
