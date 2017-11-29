@@ -22,5 +22,5 @@ printf hello | nc localhost 2000 > /tmp/test-active
 
 touch /tmp/testok
 
-systemctl stop test-active.service
+systemctl stop test-activate.service
 rm /tmp/test-active
