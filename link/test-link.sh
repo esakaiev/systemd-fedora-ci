@@ -39,9 +39,9 @@ udevadm test-builtin net_setup_link /sys/class/net/test99
 [[ "$(ethtool -k test99 | grep generic-receive-offload)" == "generic-receive-offload: on" ]]
 
 ip link del test99
-rm /etc/systemd/network/test99.link
+rm /etc/systemd/network/00-test.link
 
-cat >/etc/systemd/network/test99.link <<EOF
+cat >/etc/systemd/network/00-test.link <<EOF
 
 [Match]
 MACAddress=00:01:02:aa:bb:cc
@@ -62,6 +62,6 @@ udevadm test-builtin net_setup_link /sys/class/net/test99
 [[ "$(cat /sys/class/net/test99/address)" == "00:01:02:aa:bb:cd" ]]
 
 ip link del test99
-rm /etc/systemd/network/test99.link
+rm /etc/systemd/network/00-test.link
 
 touch /tmp/testok
