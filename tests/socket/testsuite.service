@@ -1,7 +1,0 @@
-[Unit]
-Description=Testsuite service
-After=multi-user.target
-
-[Service]
-ExecStart=/usr/bin/test-socket.sh
-Type=oneshot
