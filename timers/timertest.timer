@@ -1,0 +1,5 @@
+[Unit]
+Description=Runs timertest every 10s
+
+[Timer]
+OnActiveSec=2s

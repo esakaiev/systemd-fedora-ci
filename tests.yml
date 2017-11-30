@@ -21,6 +21,7 @@
         - execute
         - activate
         - modules-load
+        - timers
 # disabled due BZ#1494426
 #       - socket
         - link
