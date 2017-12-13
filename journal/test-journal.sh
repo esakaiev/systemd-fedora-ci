@@ -8,48 +8,48 @@ set -o pipefail
 
 # Skip empty lines
 ID=$(journalctl --new-id128 | sed -n 2p)
->/expected
+>/tmp/expected
 printf $'\n\n\n' | systemd-cat -t "$ID" --level-prefix false
 journalctl --sync
-journalctl -b -o cat -t "$ID" >/output
-cmp /expected /output
+journalctl -b -o cat -t "$ID" >/tmp/output
+cmp /tmp/expected /tmp/output
 
 ID=$(journalctl --new-id128 | sed -n 2p)
->/expected
+>/tmp/expected
 printf $'<5>\n<6>\n<7>\n' | systemd-cat -t "$ID" --level-prefix true
 journalctl --sync
-journalctl -b -o cat -t "$ID" >/output
-cmp /expected /output
+journalctl -b -o cat -t "$ID" >/tmp/output
+cmp /tmp/expected /tmp/output
 
 # Remove trailing spaces
 ID=$(journalctl --new-id128 | sed -n 2p)
-printf "Trailing spaces\n">/expected
+printf "Trailing spaces\n">/tmp/expected
 printf $'<5>Trailing spaces \t \n' | systemd-cat -t "$ID" --level-prefix true
 journalctl --sync
-journalctl -b -o cat -t "$ID" >/output
-cmp /expected /output
+journalctl -b -o cat -t "$ID" >/tmp/output
+cmp /tmp/expected /tmp/output
 
 ID=$(journalctl --new-id128 | sed -n 2p)
-printf "Trailing spaces\n">/expected
+printf "Trailing spaces\n">/tmp/expected
 printf $'Trailing spaces \t \n' | systemd-cat -t "$ID" --level-prefix false
 journalctl --sync
-journalctl -b -o cat -t "$ID" >/output
-cmp /expected /output
+journalctl -b -o cat -t "$ID" >/tmp/output
+cmp /tmp/expected /tmp/output
 
 # Don't remove leading spaces
 ID=$(journalctl --new-id128 | sed -n 2p)
-printf $' \t Leading spaces\n'>/expected
+printf $' \t Leading spaces\n'>/tmp/expected
 printf $'<5> \t Leading spaces\n' | systemd-cat -t "$ID" --level-prefix true
 journalctl --sync
-journalctl -b -o cat -t "$ID" >/output
-cmp /expected /output
+journalctl -b -o cat -t "$ID" >/tmp/output
+cmp /tmp/expected /tmp/output
 
 ID=$(journalctl --new-id128 | sed -n 2p)
-printf $' \t Leading spaces\n'>/expected
+printf $' \t Leading spaces\n'>/tmp/expected
 printf $' \t Leading spaces\n' | systemd-cat -t "$ID" --level-prefix false
 journalctl --sync
-journalctl -b -o cat -t "$ID" >/output
-cmp /expected /output
+journalctl -b -o cat -t "$ID" >/tmp/output
+cmp /tmp/expected /tmp/output
 
 # Don't lose streams on restart
 systemctl start forever-print-hola
